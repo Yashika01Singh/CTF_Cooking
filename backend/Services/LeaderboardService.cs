@@ -8,9 +8,8 @@ namespace RecipeAPI.Services
         private readonly ConcurrentDictionary<string, int> _leaderboard = new();
         private readonly ILogger<LeaderboardService> _logger;
         // admin password
-        private const string ADMIN_PASSWORD = "admin-chef-2025";
-        private const string ADMIN_FLAG = "nope";
-
+        private readonly string ADMIN_PASSWORD = Environment.GetEnvironmentVariable("ADMIN_PASSWORD") ?? "default-admin-password";
+        private readonly string ADMIN_FLAG = Environment.GetEnvironmentVariable("ADMIN_FLAG") ?? "default-flag";
 
         public async Task<LeaderboardResponse> GetLeaderboardAsync()
         {
