@@ -1,0 +1,15 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /private/
+Disallow: /restricted/
+Allow: /
+
+# CookShare Recipe Platform
+# Public recipe sharing and community features
+# 
+# Available pages:
+# /index - Main recipe platform
+# /secretrecipe - Premium content (login required)
+# /leaderboardadmin - Admin panel (authorized access only)
+
+# Note: Some premium features may require user authentication

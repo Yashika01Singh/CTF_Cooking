@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookShare Admin Panel</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        .admin-title {
+            text-align: center;
+            color: #4a5568;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 16px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        .submit-btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .submit-btn:disabled:hover {
+            transform: none;
+        }
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        .result.success {
+            background: #c6f6d5;
+            color: #2f855a;
+            border: 1px solid #9ae6b4;
+        }
+        .result.error {
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+        }
+        .flag-display {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #2d3748;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-align: center;
+            font-size: 18px;
+        }
+        .updated-leaderboard {
+            margin-top: 20px;
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .updated-leaderboard h4 {
+            margin-top: 0;
+            color: #4a5568;
+        }
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #667eea;
+        }
+        .leaderboard-item.new-entry {
+            border-left-color: #48bb78;
+            background: #f0fff4;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="admin-title">🛠️ CookShare Admin Panel</h1>
+        
+        <form id="adminForm">
+            <div class="form-group">
+                <label for="username">Chef Username:</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    class="form-input" 
+                    placeholder="Enter chef username..."
+                    required>
+            </div>
+            
+            <div class="form-group">
+                <label for="points">Recipe Points:</label>
+                <input 
+                    type="number" 
+                    id="points" 
+                    class="form-input" 
+                    placeholder="Enter recipe points..."
+                    min="0"
+                    required>
+            </div>
+            
+            <div class="form-group">
+                <label for="secretPassword">Admin Password:</label>
+                <input 
+                    type="password" 
+                    id="secretPassword" 
+                    class="form-input" 
+                    placeholder="Enter admin password..."
+                    required>
+            </div>
+            
+            <button type="submit" id="submitBtn" class="submit-btn">
+                Update Chef Rankings
+            </button>
+        </form>
+        
+        <div id="result" class="result"></div>
+        
+        <div class="back-link">
+            <a href="/index">← Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:52112';
+        
+        document.getElementById('adminForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const points = parseInt(document.getElementById('points').value);
+            const secretPassword = document.getElementById('secretPassword').value.trim();
+            const resultDiv = document.getElementById('result');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (!username || !points || !secretPassword) {
+                showResult('error', 'All fields are required');
+                return;
+            }
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+            showResult('loading', 'Validating admin access and updating leaderboard...');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/adminleaderboard`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        points: points,
+                        adminPassword: secretPassword
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    showSuccess(result.data, result.message);
+                    // Clear form
+                    document.getElementById('adminForm').reset();
+                } else {
+                    showResult('error', result.message || 'Invalid admin credentials or request failed.');
+                }
+            } catch (error) {
+                showResult('error', 'Connection failed. Please check if the platform server is running.');
+                console.error('Admin request error:', error);
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Update Chef Rankings';
+            }
+        });
+        
+        function showResult(type, message) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = `result ${type}`;
+            resultDiv.innerHTML = message;
+            resultDiv.style.display = 'block';
+        }
+        
+        function showSuccess(data, message) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = 'result success';
+            resultDiv.innerHTML = `
+                <h3>✅ ${message}</h3>
+                
+                ${data.flag ? `
+                    <div class="flag-display">
+                        ✓ Admin Access Confirmed: ${data.flag}
+                    </div>
+                ` : ''}
+                
+                <div class="updated-leaderboard">
+                    <h4>📊 Updated Chef Rankings</h4>
+                    ${data.leaderboard.map((user, index) => `
+                        <div class="leaderboard-item ${user.isNew ? 'new-entry' : ''}">
+                            <span><strong>#${index + 1}</strong> ${user.username}</span>
+                            <span><strong>${user.score} points</strong></span>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <p style="margin-top: 15px; font-size: 14px; color: #718096;">
+                    ⚠️ Note: This data will disappear when you reload the page
+                </p>
+            `;
+            resultDiv.style.display = 'block';
+        }
+        
+        // Allow Enter key submission
+        ['username', 'points', 'secretPassword'].forEach(id => {
+            document.getElementById(id).addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('adminForm').dispatchEvent(new Event('submit'));
+                }
+            });
+        });
+    </script>
+</body>
+</html>

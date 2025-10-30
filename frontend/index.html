@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookShare - Recipe Sharing Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍳 CookShare</h1>
+            <p>Share your favorite recipes with the culinary community!</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-button active" onclick="showTab('leaderboard')">Top Chefs</button>
+            <button class="tab-button" onclick="showTab('submit')">Share Recipe</button>
+            <button class="tab-button" onclick="showTab('graph')">Platform Stats</button>
+            <button class="tab-button" onclick="showTab('flags')">About</button>
+        </nav>
+
+        <!-- Leaderboard Tab -->
+        <div id="leaderboard" class="tab-content active">
+            <h2>🏆 Top Chefs This Month</h2>
+            <div class="leaderboard-container">
+                <div class="leaderboard-item top-chef">
+                    <span class="rank">1</span>
+                    <span class="username" id="topUser">chef-maria</span>
+                    <span class="score">485 points</span>
+                    <span class="hint">⭐ Featured Chef - Amazing Italian recipes!</span>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="rank">2</span>
+                    <span class="username">baker-james</span>
+                    <span class="score">392 points</span>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="rank">3</span>
+                    <span class="username">chef-sarah</span>
+                    <span class="score">301 points</span>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="rank">4</span>
+                    <span class="username">spice-guru</span>
+                    <span class="score">278 points</span>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="rank">5</span>
+                    <span class="username">pasta-lover</span>
+                    <span class="score">245 points</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Recipe Tab -->
+        <div id="submit" class="tab-content">
+            <h2>📝 Submit Your Recipe</h2>
+            <form id="recipeForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required placeholder="Enter your unique username">
+                </div>
+                <div class="form-group">
+                    <label for="recipeFile">Recipe File:</label>
+                    <div id="fileDropZone" class="file-drop-zone">
+                        <div class="drop-zone-content">
+                            <div class="drop-icon">📁</div>
+                            <div class="drop-text">
+                                <strong>Drag and drop your recipe file here</strong><br>
+                                or <button type="button" id="browseBtn" class="browse-button">browse files</button>
+                            </div>
+                            <div class="file-info">
+                                Supported formats: TXT, PDF, DOC, DOCX, JSON<br>
+                                Maximum size: 10MB
+                            </div>
+                        </div>
+                        <input type="file" id="recipeFile" name="recipeFile" accept=".txt,.pdf,.doc,.docx,.json" style="display: none;">
+                    </div>
+                    <div id="selectedFile" class="selected-file" style="display: none;">
+                        <span class="file-name"></span>
+                        <button type="button" id="removeFile" class="remove-file">✕</button>
+                    </div>
+                </div>
+                <button type="submit" id="submitBtn" disabled>Submit Recipe</button>
+            </form>
+            <div id="submitMessage" class="message"></div>
+        </div>
+
+        <!-- Resource Graph Tab -->
+        <div id="graph" class="tab-content">
+            <h2>� Platform Statistics</h2>
+            <p class="graph-hint">Explore how our recipe sharing platform connects chefs worldwide!</p>
+            <div id="resourceGraph" class="graph-container">
+                <!-- Platform architecture will be rendered here by JavaScript -->
+            </div>
+            <div class="telemetry-panel">
+                <h3>� Recent Platform Activity</h3>
+                <div class="telemetry-item">
+                    <span class="timestamp">2024-10-30 14:32:15</span>
+                    <span class="event">New recipe uploaded: <code>grandmother_pasta.pdf</code></span>
+                    <span class="source">chef-maria</span>
+                </div>
+                <div class="telemetry-item">
+                    <span class="timestamp">2024-10-30 14:31:58</span>
+                    <span class="event">Recipe shared: chocolate_cake.json</span>
+                    <span class="source">baker-james</span>
+                </div>
+                <div class="telemetry-item">
+                    <span class="timestamp">2024-10-30 14:31:45</span>
+                    <span class="event">User registered: spice-enthusiast</span>
+                    <span class="source">Platform</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resource Info Tab -->
+        <div id="flags" class="tab-content">
+            <h2>ℹ️ About CookShare</h2>
+            <div class="info-container">
+                <div class="info-item">
+                    <h3>� Our Mission</h3>
+                    <p>CookShare is a community-driven platform where passionate chefs and home cooks share their favorite recipes with food lovers around the world.</p>
+                    <ul>
+                        <li>Share your family recipes and cooking secrets</li>
+                        <li>Discover new flavors and techniques</li>
+                        <li>Connect with fellow food enthusiasts</li>
+                        <li>Build your culinary reputation</li>
+                    </ul>
+                </div>
+                
+                <div class="info-item">
+                    <h3>⭐ How We Rate Recipes</h3>
+                    <p>Recipes are evaluated based on:</p>
+                    <ul>
+                        <li>Creativity and unique flavor combinations</li>
+                        <li>Clear instructions and ingredient lists</li>
+                        <li>Community engagement and feedback</li>
+                        <li>Overall presentation and appeal</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

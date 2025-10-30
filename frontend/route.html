@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Handler</title>
+</head>
+<body>
+    <script>
+        // Simple client-side routing for clean URLs
+        const path = window.location.pathname;
+        
+        const routes = {
+            '/secretrecipe': 'secretrecipe.html',
+            '/leaderboardadmin': 'leaderboardadmin.html',
+            '/index': 'index.html',
+            '/': 'index.html'
+        };
+        
+        if (routes[path]) {
+            window.location.replace(routes[path]);
+        } else {
+            // If route not found, redirect to index
+            window.location.replace('index.html');
+        }
+    </script>
+</body>
+</html>
